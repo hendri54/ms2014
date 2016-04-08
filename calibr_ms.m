@@ -61,6 +61,7 @@ outS = equilibrium_ms(countryS, paramOutS, cS);
 var_save_ms(outS, 'equilibrium', setNo);
 
 equil_show_ms(countryS, setNo);
+disp(paramOutS);
 
 
 %% Nested deviation

@@ -35,12 +35,12 @@ devWage2 = 1 * (wGrowth2 - tgS.w64_55) ./ tgS.w64_55;
 
 %% Schooling
 
-devSchool = 1 * (outS.hhS.s - tgS.sUS) ./ tgS.sUS;
+devSchool = 3 * (outS.hhS.s - tgS.sUS) ./ tgS.sUS;
 % devSchool = dev28;
 
-devSSpend = 1 * (outS.equilS.sSpendGdp - tgS.sSpendY) ./ tgS.sSpendY;
+devSSpend = 10 * (outS.equilS.sSpendGdp - tgS.sSpendY) ./ tgS.sSpendY;
 
-devChildSpend = 1 * (outS.equilS.childSpendGdp - tgS.childSpendY) ./ tgS.childSpendY;
+devChildSpend = 10 * (outS.equilS.childSpendGdp - tgS.childSpendY);
 
 
 %% Deviation

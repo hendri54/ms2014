@@ -21,7 +21,7 @@ cS.pvector.add(pS);
 pS = pstructLH('deltaH', 'deltaH', 'h depreciation', 0.027, 0, 0.2, 1);
 cS.pvector.add(pS);
 
-pS = pstructLH('gamma', 'gamma', 'curvature', 0.486 + 0.4, 0.3, 0.98, 1);
+pS = pstructLH('gamma', 'gamma', 'curvature', 0.486 + 0.4, 0.3, 0.99, 1);
 cS.pvector.add(pS);
 
 pS = pstructLH('g1g', 'g1OverGamma', 'gamma1 / gamma', 0.486 / 0.886, 0.1, 0.9, 1);

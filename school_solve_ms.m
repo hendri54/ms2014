@@ -17,7 +17,7 @@ guessS.ubV = [1e3,  1e3,  25,   1e3]';
 guessS.guessMin = 1;
 guessS.guessMax = 10;
 
-guessV = optim_lh.guess_make_lh(guessS.valueV, guessS.lbV, guessS.ubV, guessS);
+guessV = optimLH.guess_make(guessS.valueV, guessS.lbV, guessS.ubV, guessS);
 
 %devV = s_dev(guessV)
 
@@ -76,7 +76,7 @@ xE = (hE / cS.hTechS.hB) .^ (1 / paramS.v);
 
 %% Nested Deviation function
 function [devV, hE, hS, s, qE] = s_dev(guessV)
-   guess2V = optim_lh.guess_extract_lh(guessV, guessS.lbV, guessS.ubV, guessS);
+   guess2V = optimLH.guess_extract(guessV, guessS.lbV, guessS.ubV, guessS);
    hE = guess2V(1);
    hS = guess2V(2);
    s  = guess2V(3);
