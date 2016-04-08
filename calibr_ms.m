@@ -8,8 +8,7 @@ solverStr = 'fminsearch';
 scalarDev = true;
 
 % Data for US
-popGrowth = cS.tgS.fertility / cS.demogS.B;
-countryS = CountryParamsMs(cS.techS.zUS, 1, popGrowth, cS.demogS.Rmax, cS.demogS.T_US);
+countryS = param_ms.country_data('USA', setNo);
 
 % devV = cal_dev_ms(countryS, paramS, cS);
 % 

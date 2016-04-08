@@ -1,6 +1,14 @@
 function run_all_ms(setNo)
 
 cS = const_ms(setNo);
+saveFigures = 1;
+
+
+%% Preparation
+
+% Make directories
+filesLH.mkdir(cS.dirS.matDir);
+filesLH.mkdir(cS.dirS.outDir);
 
 % Replicate results in MS2014 with their parameters
 % Essentially a test of the schooling related code
@@ -17,8 +25,15 @@ countryS = CountryParamsMs(cS.techS.zUS, 1, popGrowth, cS.demogS.Rmax, cS.demogS
 equil_show_ms(countryS, setNo);
 
 
+%% Comparative statics
+
+results_ms.equil_vary_params(saveFigures, setNo);
+
+
 %% Other countries
 
+% Calibrate TFP for each country group
+country_ms.calibrate_tfp(setNo)
 
 
 %% Other code

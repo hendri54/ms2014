@@ -21,7 +21,8 @@ cS.pvector.add(pS);
 pS = pstructLH('deltaH', 'deltaH', 'h depreciation', 0.027, 0, 0.2, 1);
 cS.pvector.add(pS);
 
-pS = pstructLH('gamma', 'gamma', 'curvature', 0.486 + 0.4, 0.3, 0.99, 1);
+% Must be bounded away from 1. Otherwise model has crazy implications
+pS = pstructLH('gamma', 'gamma', 'curvature', 0.486 + 0.4, 0.3, 0.95, 1);
 cS.pvector.add(pS);
 
 pS = pstructLH('g1g', 'g1OverGamma', 'gamma1 / gamma', 0.486 / 0.886, 0.1, 0.9, 1);
@@ -64,6 +65,7 @@ tgS.KY = 2.52;
 tgS.intRate = 0.055;
 tgS.w55_25 = 2;
 tgS.w64_55 = 0.79;
+tgS.pkUS = 1;
 tgS.sUS = 12.05;
 tgS.sSpendY = 0.045;
 tgS.childSpendY = 0.011;
@@ -100,11 +102,13 @@ cS.schoolTechS = OutputTechMs(cS.hTechS.capShare);
 
 %% Directories
 
+setStr = sprintf('set%03i', setNo);
+
 dirS.baseDir = '/users/lutz/dropbox/hc/ms2014/';
 dirS.progDir = fullfile(dirS.baseDir, 'prog');
 dirS.dataDir = fullfile(dirS.baseDir, 'data');
-dirS.matDir  = fullfile(dirS.baseDir, 'mat');
-dirS.outDir  = fullfile(dirS.baseDir, 'out');
+dirS.matDir  = fullfile(dirS.baseDir, 'mat', setStr);
+dirS.outDir  = fullfile(dirS.baseDir, 'out', setStr);
 
 % File with MS results
 dirS.resultFile = fullfile(dirS.dataDir, 'result_table.xlsx');
