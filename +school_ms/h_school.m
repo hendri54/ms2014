@@ -1,4 +1,4 @@
-function hSchoolV = h_school_ms(sV, wage, pW, ageRetireV, paramS, cS)
+function hSchoolV = h_school(sV, wage, pW, ageRetireV, paramS, cS)
 % Compute h(6+s) implied by MS's tables
 %{
 IN

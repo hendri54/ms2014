@@ -2,7 +2,7 @@ function [dev28, hE, qE, xE, hS] = dev_given_s(s, ageRetire, priceS, paramS, cS)
 % Deviations from schooling conditions for given s
 
 % h(s) from (27)
-hS = h_school_ms(s, priceS.wage, priceS.pW, ageRetire, paramS, cS);
+hS = school_ms.h_school(s, priceS.wage, priceS.pW, ageRetire, paramS, cS);
 
 % qE hE^g1 from (26)
 qEhEG1 = school_ms.qe_he_from26(s, ageRetire, priceS, paramS);

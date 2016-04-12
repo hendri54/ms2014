@@ -49,4 +49,15 @@ g_xsV = diff(log(xs_aV)) ./ diff(ageV);
 assert(max(abs(g_xsV - paramS.g_xs)) < 1e-3);
 
 
+%% Test optimality of schooling against optimal stopping condition
+
+% replace with updated condition: -rV - dV/dT +++++
+
+bpS = BenPorathContTimeLH(paramS.zH, paramS.deltaH, paramS.gamma1, paramS.gamma2, ageRetire - hhS.s, hhS.hS, ...
+   priceS.pW, paramS.r, priceS.wage);
+dVds = bpS.marginal_value_age0;
+devOptS = -priceS.pS .* xs_aV(end) + q_aV(end) .* (F_aV(end) - paramS.deltaH .* hhS.hS) + dVds;
+checkLH.approx_equal(devOptS, 0, 1e-3, []);
+
+
 end

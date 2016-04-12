@@ -1,4 +1,4 @@
-function [haV, naV, xwV, earnV, pvEarn, bpS] = ojt_solve_ms(ageV, wage, pW, R, s, h6S, paramS, cS)
+function [haV, naV, xwV, earnV, bpS] = ojt_solve_ms(ageV, wage, pW, R, s, h6S, paramS, cS)
 % Solve job training part for given s, h(6+s), for one age
 %{
 IN

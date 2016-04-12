@@ -53,6 +53,8 @@ hTechS.hB = 1;
 % hTechS.v = 0.618;
 cS.hTechS = hTechS;
 
+% Age at which persons effectively enter the model
+demogS.startAge = 6;
 % Age at which people have kids
 demogS.B = 25;
 demogS.T_US = 78.8;

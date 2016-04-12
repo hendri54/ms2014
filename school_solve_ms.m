@@ -1,6 +1,8 @@
 function [hE, hS, s, qE, xE] = school_solve_ms(priceS, paramS, ageRetire, setNo)
 % Solve schooling part of the hh problem, given parameters
 %{
+Schooling could be 0
+
 IN
    priceS
       struct with prices: pW, pS, pE, wage
@@ -8,7 +10,36 @@ IN
 
 cS = const_ms(setNo);
 
-%fprintf('\nSolve all 4 equations\n');
+
+%% Check whether schooling is 0
+
+% OJT problem when s = 0
+% We don't know hE yet, but it does not matter
+bpS = BenPorathContTimeLH(paramS.zH, paramS.deltaH, paramS.gamma1, paramS.gamma2, ...
+    ageRetire, 1, priceS.pW, paramS.r, priceS.wage);
+
+ % Marginal value of h(6)
+qE = bpS.marginal_value_h(cS.demogS.startAge);
+
+% Child care problem
+ccS = ChildCareMS(cS.hTechS.hB, priceS.pE, paramS.v);
+% Optimal h(6) when schooling is 0
+[hE, xE] = ccS.solve_given_qe(qE);
+
+% Is this consistent with the job training problem being interior?
+% (13a) with inequality. now we know hE
+bpS.h0 = hE;
+nh6 = bpS.nh(cS.demogS.startAge);
+
+% Schooling = 0 if nh6 < h6 = hE
+if nh6 < hE
+   hS = hE;
+   s = 0;
+   return
+end
+
+
+%% Schooling is > 0
 
 guessS.valueV = [1, 1, 6, 1]';
 guessS.nameV = {'hE', 'hS', 's', 'qE'};

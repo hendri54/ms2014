@@ -44,4 +44,13 @@ equilS.sSpendGdp = equilS.xs * priceS.pS / equilS.y;
 equilS.childSpendGdp = equilS.xe * priceS.pE / equilS.y;
 
 
+%% Not needed for calibration
+
+% Output per worker used for xw
+equilS.yW = equil_ms.aggr_xw(hhS.s, hhS.hS, countryS, priceS, paramS, cS);
+
+% Consumption per worker
+equilS.consPerWorker = equilS.yc - priceS.pW .* equilS.yW;
+
+
 end

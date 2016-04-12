@@ -1,4 +1,4 @@
-classdef OutputTechMs
+classdef OutputTechMs < handle
 %{
 Production functions: y = z (k/h) ^ theta
 %}

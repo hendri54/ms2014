@@ -1,4 +1,4 @@
-classdef CountryParamsMs
+classdef CountryParamsMs < handle
 % Country specific parameters
 
 properties

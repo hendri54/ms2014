@@ -13,6 +13,11 @@ factor_prices_test_ms(setNo)
 priceS = factor_prices_ms(TFP, pk, cS);
 
 
+%% Child care
+
+ChildCareTestMS
+
+
 %% Schooling
 
 
@@ -28,7 +33,7 @@ school_ms.qe_he_from26_test(setNo);
 school_dev_ms(hE, hS, s, qE, ageRetire, priceS, paramS, cS);
 
 % h(6+s)
-h_school_ms(7.3, 1.1, 1.8, ageRetire, paramS, cS);
+school_ms.h_school(7.3, 1.1, 1.8, ageRetire, paramS, cS);
 
 % Solve school problem
 [hE, hS, s, qE] = school_solve_ms(priceS, paramS, ageRetire, setNo);

@@ -8,7 +8,7 @@ IN
 %}
 
 % (27)
-hS27 = h_school_ms(s, priceS.wage, priceS.pW, ageRetire, paramS, cS);
+hS27 = school_ms.h_school(s, priceS.wage, priceS.pW, ageRetire, paramS, cS);
 dev27 = hS27 - hS;
 
 % (26)
