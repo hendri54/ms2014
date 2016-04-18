@@ -1,4 +1,4 @@
-function [ys, xs, xe] = s_output_ms(hhXe, hE, qE, pS, s, popGrowth, T, massWorking, paramS, cS)
+function [ys, xs, xe] = s_output_ms(hhS, popGrowth, T, massWorking, cS)
 %{
 IN:
    hhXe
@@ -13,18 +13,20 @@ OUT:
       output used for xE
 %}
 
-% xsV = hh_xs_ms(ageV, hE, qE, pS, paramS, cS)
-
-% f_aV = griddedInterpolant(ageV, phi_age_ms(ageV, popGrowth, T) .* xs_aV, 'linear');
 
 % Aggregate xs, p. 2744
-   % replace hh_xs_ms +++++
-xs = integral(@(x) phi_age_ms(x, popGrowth, T) .* hh_xs_ms(x, hE, qE, pS, paramS, cS), ...
-   cS.demogS.startAge, cS.demogS.startAge + s) / massWorking;
+xs = integral(@integ_nested, ...
+   cS.demogS.startAge, cS.demogS.startAge + hhS.s) / massWorking;
 
 % Aggregate xe (phi(6) makes no sense!)
-xe = hhXe .* phi_age_ms(cS.demogS.startAge, popGrowth, T) / massWorking;
+xe = hhS.xE .* phi_age_ms(cS.demogS.startAge, popGrowth, T) / massWorking;
 
 ys = xe + xs;
 
+
+%% Nested: integrand
+   function outV = integ_nested(ageInV)
+      [~, xs_aV] = hhS.spS.age_profile(ageInV - cS.demogS.startAge, hhS.hE, hhS.qE);
+      outV = phi_age_ms(ageInV, popGrowth, T) .* xs_aV;
+   end
 end

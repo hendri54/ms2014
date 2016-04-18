@@ -9,7 +9,7 @@ ageRetire = cS.demogS.Rmax - cS.demogS.startAge;
 %% Set parameters
 
 % Use same params and prices for schooling and OJT?
-sameParams = false;
+sameParams = true;
 
 paramS.beta1 = 0.38;
 paramS.beta2 = 0.31;
@@ -35,7 +35,7 @@ TFP = 1;
 pk = 1;
 priceS = factor_prices_ms(TFP, pk, cS);
 
-if true
+if false
    priceS.pS = 0.99;
    sameParams = false;
 end
@@ -66,7 +66,8 @@ check_optimality_ms(schoolS, spS, bpS, sameParams);
 check_given_s(schoolS, spS);
 
 % Check marginal value of s
-check_mvalue_s(spS)
+%  currently not correct
+% +++++  check_mvalue_s(spS)
 
 check_age_profiles(schoolS, spS);
 
@@ -157,7 +158,7 @@ function check_given_s(schoolS, spS)
    checkLH.approx_equal(marginalValueS, 0, 1e-3, []);
 
    % Plot deviation from optimal schooling condition against s
-   if true
+   if false
       sV = linspace(6, 14, 30)';
       valueV = zeros(size(sV));
       devOptSV = zeros(size(sV));

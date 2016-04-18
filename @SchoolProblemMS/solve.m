@@ -18,7 +18,7 @@ if true
    % Schooling = 0 if deviation from optimal schooling is < 0 and increasing in s
    devOptS  = spS.marginal_value_s(0, schoolS.hS, schoolS.xS, schoolS.qS);
    devOpt2S = spS.marginal_value_s(0.02, schoolS.hS, schoolS.xS, schoolS.qS);
-   fprintf('devOptS with s = 0  /  s = 0.05  /  change: %.3f  / %.3f  /  %f \n', devOptS, devOpt2S, devOpt2S - devOptS);
+   % fprintf('devOptS with s = 0  /  s = 0.05  /  change: %.3f  / %.3f  /  %f \n', devOptS, devOpt2S, devOpt2S - devOptS);
    if (devOptS < 0  &&  (devOpt2S < devOptS))  ||  (devOptS > 0  &&  (devOpt2S > devOptS))
       return
    end
@@ -44,11 +44,11 @@ if 1
       
       optS = optimset('fminsearch');
       optS.MaxIter = 1e3;
-      optS.Display = 'final';
+      optS.Display = 'off';
       [solnV, ~, exitFlag] = fminsearch(@s_dev_unbounded, guessV, optS);
    else
       scalarDev = false;
-      optS = optimoptions('fsolve', 'MaxFunctionEvaluations', 1e3, 'Display', 'final');
+      optS = optimoptions('fsolve', 'MaxFunctionEvaluations', 1e3, 'Display', 'off');
       [solnV, ~, exitFlag] = fsolve(@s_dev_unbounded, guessV, optS);
    end
    
@@ -60,7 +60,7 @@ else
    
    guessV = optimLH.guess_make(guessS.valueV, guessS.lbV, guessS.ubV, guessS);
 
-   optS = optimoptions('lsqnonlin', 'MaxFunctionEvaluations', 1e3, 'Display', 'final');
+   optS = optimoptions('lsqnonlin', 'MaxFunctionEvaluations', 1e3, 'Display', 'off');
    [solnV, ~, exitFlag] = lsqnonlin(@s_dev, guessV, repmat(guessS.guessMin, size(guessV)), repmat(guessS.guessMax, size(guessV)), optS);
    
    assert(all(solnV >= guessS.guessMin));
@@ -74,11 +74,10 @@ else
 end
 
 
-fprintf('Max dev: %f \n',  max(abs(devV)));
+% fprintf('Max dev: %f \n',  max(abs(devV)));
 
-
-fprintf('hE = %.2f    hS = %.2f    s = %.2f    qE = %.2f   xE = %.2f  \n',  ...
-   schoolS.hE, schoolS.hS, schoolS.s, schoolS.qE, schoolS.xE);
+% fprintf('hE = %.2f    hS = %.2f    s = %.2f    qE = %.2f   xE = %.2f  \n',  ...
+%    schoolS.hE, schoolS.hS, schoolS.s, schoolS.qE, schoolS.xE);
 
 
 %% Nested Deviation function

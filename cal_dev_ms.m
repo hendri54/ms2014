@@ -22,7 +22,7 @@ outS = equilibrium_ms(countryS, paramS, cS);
 % wages are computed for a grid of ages; interpolate
 
 assert(isequal(length(tgS.wageGrowthAgeV), 3));
-wageV = interp1(outS.hhS.ageV, outS.hhS.wageV, tgS.wageGrowthAgeV, 'linear');
+wageV = interp1(outS.hhS.experV + cS.demogS.startAge + outS.hhS.s, outS.hhS.wageV, tgS.wageGrowthAgeV, 'linear');
 
 % Wages age 55 / 25
 wGrowth = wageV(2) / max(1e-4, wageV(1));

@@ -31,7 +31,7 @@ hhS = outS.hhS;
 fS = FigureLH('visible', 'on');
 fS.new;
 
-fS.plot_line(hhS.ageV, hhS.wageV, 1);
+fS.plot_line(hhS.experV + cS.demogS.startAge + hhS.s, hhS.wageV, 1);
 xlabel('Age');
 ylabel('Wage');
 

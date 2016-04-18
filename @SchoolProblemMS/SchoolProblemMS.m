@@ -141,6 +141,7 @@ methods
    % Compute age profile during schooling
    % Checked: 2016-Apr-15
    function [h_aV, xs_aV, q_aV, F_aV] = age_profile(spS, ageV, hE, qE)
+      validateattributes(ageV, {'double'}, {'finite', 'nonnan', 'nonempty', 'real', '>=', 0})
       h_aV = spS.h_age(ageV, hE, qE);
       xs_aV = spS.x_age(ageV, hE, qE);      
       q_aV = spS.q_age(ageV, h_aV, hE, qE);

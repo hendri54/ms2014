@@ -17,12 +17,5 @@ priceS = factor_prices_ms(countryS.TFP, countryS.pk, cS);
 hhS = hh_solve_ms(countryS.ageRetire, priceS, paramS, cS);
 
 
-% Ages to check
-nAge = 20;
-ageV = linspace(6,  6 + hhS.s, nAge);
-
-% Self test built in
-[h_aV, xs_aV, q_aV] = school_ms.age_profile(ageV, hhS, priceS, paramS, cS);
-
 
 end

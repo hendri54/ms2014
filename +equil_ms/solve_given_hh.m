@@ -10,8 +10,7 @@ equilS.hBar = hbar_ms(equilS.massWorking, hhS.hS, hhS.s, countryS, priceS, param
 
 % Output required in s sector
 [equilS.ys, equilS.xs, equilS.xe] = ...
-   s_output_ms(hhS.xE, hhS.hE, hhS.qE, priceS.pS, hhS.s, countryS.popGrowth, countryS.T, ...
-   equilS.massWorking, paramS, cS);
+   s_output_ms(hhS, countryS.popGrowth, countryS.T, equilS.massWorking, cS);
 
 % Output in s sector / hs
 equilS.y_hs = cS.schoolTechS.output(countryS.TFP, priceS.kappaS);

@@ -1,8 +1,9 @@
-function outS = hh_solve_ms(ageRetire, priceS, paramS, cS)
+function hhS = hh_solve_ms(ageRetire, priceS, paramS, cS)
 % Solution to hh problem
 %{
 %}
 
+% Schooling
 ccS = ChildCareMS(cS.hTechS.hB, priceS.pE, paramS.v);
 bpS = BenPorathContTimeLH(paramS.zH, paramS.deltaH, paramS.gamma1, paramS.gamma2, ageRetire, 1, ...
    priceS.pW, paramS.r, priceS.wage);
@@ -10,16 +11,13 @@ bpS = BenPorathContTimeLH(paramS.zH, paramS.deltaH, paramS.gamma1, paramS.gamma2
 spS = SchoolProblemMS(paramS.zs, paramS.deltaH, paramS.beta1, paramS.beta2, ageRetire - cS.demogS.startAge, ...
    priceS.pS, paramS.r, ccS, bpS);
 
-outS = spS.solve;
+hhS = spS.solve;
+hhS.spS = spS;
 
-% [outS.hE, outS.hS, outS.s, outS.qE, outS.xE] = ...
-%    school_solve_ms(priceS, paramS, ageRetire, cS.setNo);
-
-
+% OJT
 nAge = 100;
-outS.experV = linspace(0.01, ageRetire - outS.s - cS.demogS.startAge, nAge);
-[outS.h_aV, outS.n_aV, outS.xw_aV, outS.wageV] = ...
-   ojt_solve_ms(outS.experV, priceS.wage, priceS.pW, ageRetire, outS.s, outS.hS, paramS, cS);
-
+hhS.experV = linspace(0.01, ageRetire - hhS.s - cS.demogS.startAge, nAge);
+[hhS.h_aV, hhS.n_aV, hhS.xw_aV, hhS.wageV] = ...
+   ojt_solve_ms(hhS.experV, priceS.wage, priceS.pW, ageRetire, hhS.hS, paramS, cS);
 
 end

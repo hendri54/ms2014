@@ -120,15 +120,6 @@ cS.outputTechS = OutputTechMs(cS.techS.capShare);
 
 cS.schoolTechS = OutputTechMs(cS.hTechS.capShare);
 
-if cS.sameCurvature
-   cS.pvector.calibrate('beta', 0);
-   cS.pvector.calibrate('b1b', 0);
-end
-
-if cS.sameProductivity
-   cS.pvector.calibrate('zs', 0);
-end
-
 % cS.demogS.popGrowthUS = cS.tgS.fertility / cS.demogS.B;
 
 

@@ -15,6 +15,7 @@ pS = 1.2;
 hhXe = 0.4;
 
 
-s_output_ms(hhXe, hE, qE, pS, s, popGrowth, T, massWorking, paramS, cS);
+s_output_ms(hhS, popGrowth, T, massWorking, cS)
+hhXe, hE, qE, pS, s, popGrowth, T, massWorking, paramS, cS);
 
 end
