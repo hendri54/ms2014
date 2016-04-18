@@ -7,7 +7,7 @@ IN
       hS = h(6+s)
 %}
 
-% (27)
+% (27); better to use more generic expression
 hS27 = school_ms.h_school(s, priceS.wage, priceS.pW, ageRetire, paramS, cS);
 dev27 = hS27 - hS;
 

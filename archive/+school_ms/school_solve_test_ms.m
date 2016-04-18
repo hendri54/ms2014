@@ -27,6 +27,10 @@ qDotV = diff(q_aV) ./ diff(ageV);
 
 %% Check first-order conditions
 
+bpS = BenPorathContTimeLH(paramS.zH, paramS.deltaH, paramS.gamma1, paramS.gamma2, ageRetire - hhS.s - 6, hhS.hS, ...
+   priceS.pW, paramS.r, priceS.wage);
+
+
 % (13a) and (13b) are tested in age_profile.m
 
 % (13c)
@@ -41,7 +45,7 @@ checkLH.approx_equal(hDotV, 0.5 .* (rhsV(1 : (nAge-1)) + rhsV(2:nAge)), 1e-3, []
 checkLH.approx_equal(hhS.qE, q_aV(1), 1e-4, []);
 
 % q(6+s) = expression from OJT
-qOjt = priceS.wage ./ (paramS.r + paramS.deltaH) .* m_age_ms(6 + hhS.s, ageRetire, paramS.deltaH, paramS.r);
+qOjt = bpS.marginal_value_h(0);
 checkLH.approx_equal(qOjt,  q_aV(end), 1e-4, []);
 
 % Check growth rate of xs
@@ -50,14 +54,30 @@ assert(max(abs(g_xsV - paramS.g_xs)) < 1e-3);
 
 
 %% Test optimality of schooling against optimal stopping condition
+% This holds regardless of the continuation problem
 
-% replace with updated condition: -rV - dV/dT +++++
-
-bpS = BenPorathContTimeLH(paramS.zH, paramS.deltaH, paramS.gamma1, paramS.gamma2, ageRetire - hhS.s, hhS.hS, ...
-   priceS.pW, paramS.r, priceS.wage);
-dVds = bpS.marginal_value_age0;
+% Changing s has this effect
+dVds = -paramS.r .* bpS.pv_earnings - bpS.marginal_value_T;
 devOptS = -priceS.pS .* xs_aV(end) + q_aV(end) .* (F_aV(end) - paramS.deltaH .* hhS.hS) + dVds;
 checkLH.approx_equal(devOptS, 0, 1e-3, []);
+
+checkLH.approx_equal(bpS.marginal_value_age0, dVds, 1e-3, []);
+
+% Another formula
+C1 = (1 - paramS.gamma) ./ paramS.gamma1 .* (bpS.bracket_term .^ (1 ./ (1 - paramS.gamma)));
+dVds2 = priceS.wage .* hhS.hS ./ (paramS.r + paramS.deltaH) .* (bpS.mprime_age(0) - paramS.r .* bpS.m_age(0)) ...
+   - priceS.wage .* C1 .* (bpS.m_age(0) .^ (1 ./ (1 - paramS.gamma)));
+checkLH.approx_equal(dVds2, dVds, [], 1e-3);
+
+
+% *****  Test Rody's equation (10)
+% Fails
+% C1 = hhS.hS .* priceS.wage .* (bpS.m_age(0) - bpS.mprime_age(0) ./ (paramS.r + paramS.deltaH));
+% C2 = priceS.wage .* (1 - paramS.gamma) ./ paramS.gamma1 .* ...
+%    ((bpS.bracket_term .* bpS.m_age(0)) .^ (1 ./ (1 - paramS.gamma)));
+% dVds2 = -(C1 + C2);
+% 
+% checkLH.approx_equal(dVds2, dVds, [], 1e-3);
 
 
 end

@@ -16,7 +16,7 @@ cS = const_ms(setNo);
 % OJT problem when s = 0
 % We don't know hE yet, but it does not matter
 bpS = BenPorathContTimeLH(paramS.zH, paramS.deltaH, paramS.gamma1, paramS.gamma2, ...
-    ageRetire, 1, priceS.pW, paramS.r, priceS.wage);
+    ageRetire - 6, 1, priceS.pW, paramS.r, priceS.wage);
 
  % Marginal value of h(6)
 qE = bpS.marginal_value_h(cS.demogS.startAge);

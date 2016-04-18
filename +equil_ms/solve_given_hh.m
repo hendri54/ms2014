@@ -2,7 +2,8 @@ function equilS = solve_given_hh(hhS, countryS, priceS, paramS, cS)
 % Solve equilibrium, given solution to hh problem
 
 % Mass of working persons
-equilS.massWorking = integral(@(x) phi_age_ms(x, countryS.popGrowth, countryS.T),  6 + hhS.s, countryS.ageRetire);
+equilS.massWorking = integral(@(x) phi_age_ms(x, countryS.popGrowth, countryS.T),  ...
+   cS.demogS.startAge + hhS.s, countryS.ageRetire);
 
 % Average h
 equilS.hBar = hbar_ms(equilS.massWorking, hhS.hS, hhS.s, countryS, priceS, paramS, cS);

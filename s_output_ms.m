@@ -18,10 +18,12 @@ OUT:
 % f_aV = griddedInterpolant(ageV, phi_age_ms(ageV, popGrowth, T) .* xs_aV, 'linear');
 
 % Aggregate xs, p. 2744
-xs = integral(@(x) phi_age_ms(x, popGrowth, T) .* hh_xs_ms(x, hE, qE, pS, paramS, cS), 6, 6+s) / massWorking;
+   % replace hh_xs_ms +++++
+xs = integral(@(x) phi_age_ms(x, popGrowth, T) .* hh_xs_ms(x, hE, qE, pS, paramS, cS), ...
+   cS.demogS.startAge, cS.demogS.startAge + s) / massWorking;
 
 % Aggregate xe (phi(6) makes no sense!)
-xe = hhXe .* phi_age_ms(6, popGrowth, T) / massWorking;
+xe = hhXe .* phi_age_ms(cS.demogS.startAge, popGrowth, T) / massWorking;
 
 ys = xe + xs;
 

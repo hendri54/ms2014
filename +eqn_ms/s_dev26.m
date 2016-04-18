@@ -1,5 +1,5 @@
 function dev26 = s_dev26(qE, hE, s, ageRetire, priceS, paramS)
-% Eqn 26)
+% Eqn (26). Really qE hE ^ gamma1 * growth factor = qS hS ^ gamma1
 
 rdh = paramS.r + paramS.deltaH;
 m6S = m_age_ms(6+s, ageRetire, paramS.deltaH, paramS.r);

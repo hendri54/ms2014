@@ -39,7 +39,7 @@ school_ms.h_school(7.3, 1.1, 1.8, ageRetire, paramS, cS);
 [hE, hS, s, qE] = school_solve_ms(priceS, paramS, ageRetire, setNo);
 
 school_solve_test_ms(setNo);
-hh_solve_given_s_test_ms(setNo)
+% hh_solve_given_s_test_ms(setNo)
 
 % This currently fails b/c the equation for h(a) is likely wrong +++++
 % ha_school_test_ms(setNo)
@@ -48,8 +48,8 @@ hh_solve_given_s_test_ms(setNo)
 %% Household
 
 % Solve job training problem
-ageV = linspace(6+s+0.1, ageRetire, 20);
-ojt_solve_ms(ageV, priceS.wage, priceS.pW, ageRetire, s, hS, paramS, cS);
+experV = linspace(s+0.1, ageRetire, 20) - s;
+ojt_solve_ms(experV, priceS.wage, priceS.pW, ageRetire - s, hS, paramS, cS);
 
 % Solve household problem
 hh_test_ms(setNo);
