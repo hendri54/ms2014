@@ -228,6 +228,35 @@ methods
    end
 
 
+   %% Value function, given solution
+   %{
+   IN
+      schoolS
+         solution
+   
+   OUT
+      present value of lifetime earnings, net of xs, xe
+      discounted to start of schooling
+   %}
+   function [value, pvXs, pvXe, pvEarn] = value_fct(spS, schoolS)
+      spS.bpS.T = spS.T - schoolS.s;
+      spS.bpS.h0 = schoolS.hS;
+      pvEarn = exp(-spS.r .* schoolS.s) .* spS.bpS.pv_earnings;
+
+      % Present value of xs
+      if schoolS.s > 0
+         gx = spS.g_xs;
+         pvXs = spS.pS .* schoolS.xS .* exp(-gx .* schoolS.s) ./ (gx - spS.r) .* ...
+            (exp((gx - spS.r) * schoolS.s) - 1);
+      else
+         pvXs = 0;
+      end
+
+      pvXe = spS.childCareS.pE .* schoolS.xE;
+
+      value = -pvXs - pvXe + pvEarn;
+   end   
+
    % Eqn (26) (does not hold any more) (really a version of qE hE^gamma1 equation)
 %    function dev26 = dev26(spS, qE, hE, s)
 % 

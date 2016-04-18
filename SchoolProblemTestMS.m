@@ -35,12 +35,12 @@ TFP = 1;
 pk = 1;
 priceS = factor_prices_ms(TFP, pk, cS);
 
-if false
-   priceS.pS = 0.99;
+if 0
+   priceS.pS = 0.98;
    sameParams = false;
 end
 
-if false
+if 0
    priceS.pS = 0.99;
    priceS.pE = 0.99;
    priceS.pW = 0.99;
@@ -55,6 +55,8 @@ bpS = BenPorathContTimeLH(paramS.zH, paramS.deltaH, paramS.gamma1, paramS.gamma2
 
 spS = SchoolProblemMS(paramS.zs, paramS.deltaH, paramS.beta1, paramS.beta2, ageRetire, priceS.pS, paramS.r, ccS, bpS);
 schoolS = spS.solve;
+disp('Solution to school problem:');
+disp(schoolS);
 
 checkLH.approx_equal(spS.gamma, paramS.beta1 + paramS.beta2, 1e-6, []);
 
@@ -62,12 +64,15 @@ checkLH.approx_equal(spS.gamma, paramS.beta1 + paramS.beta2, 1e-6, []);
 % Check optimality conditions
 check_optimality_ms(schoolS, spS, bpS, sameParams);
 
+% Check marginal value of s
+% currently not correct +++++
+% check_mvalue_s(spS)
+
 % Check against solution for given s
 check_given_s(schoolS, spS);
 
-% Check marginal value of s
-%  currently not correct
-% +++++  check_mvalue_s(spS)
+% Check value function
+check_value_ms(schoolS, spS);
 
 check_age_profiles(schoolS, spS);
 
@@ -158,23 +163,29 @@ function check_given_s(schoolS, spS)
    checkLH.approx_equal(marginalValueS, 0, 1e-3, []);
 
    % Plot deviation from optimal schooling condition against s
-   if false
+   if true
       sV = linspace(6, 14, 30)';
       valueV = zeros(size(sV));
       devOptSV = zeros(size(sV));
       HV = zeros(size(sV));
       dVdsV = zeros(size(sV));
+      n0V = zeros(size(sV));
       for i1 = 1 : length(sV)
-         [devOptSV(i1), schoolS, valueV(i1)] = spS.solve_given_s(sV(i1));
+         [devOptSV(i1), school2S, valueV(i1)] = spS.solve_given_s(sV(i1));
          % Hamiltonian
-         HV(i1) = -spS.pS .* schoolS.xS  +  schoolS.qS .* (spS.htech(schoolS.hS, schoolS.xS) - spS.deltaH * schoolS.hS);
+         HV(i1) = -spS.pS .* school2S.xS  +  school2S.qS .* (spS.htech(school2S.hS, school2S.xS) - spS.deltaH * school2S.hS);
          % Marginal value of s on OJT
          spS.bpS.T = spS.T - sV(i1);
+         spS.bpS.h0 = school2S.hS;
          dVdsV(i1) = spS.bpS.marginal_value_age0;
+         n0V(i1) = spS.bpS.nh(0) ./ school2S.hS;
       end
-      disp('Schooling  mValueS  Hamilt  dVds  value');
-      disp([sV, devOptSV, HV, dVdsV valueV - valueV(1)]);
-      keyboard;
+      fprintf(' %10s',  'Schooling',  'mValueS',  'Hamilt',  'dVds',  'value',  'n0');
+      fprintf('\n');
+      for i1 = 1 : length(sV)
+         fprintf(' %10.3f', sV(i1), devOptSV(i1), HV(i1), dVdsV(i1), valueV(i1) - valueV(1), n0V(i1));
+         fprintf('\n');
+      end
    end
 
    
@@ -182,15 +193,38 @@ function check_given_s(schoolS, spS)
    ds = 1e-2;
    [~,~, valueHigh] = spS.solve_given_s(schoolS.s + ds);
    [~,~, valueLow] = spS.solve_given_s(schoolS.s - ds);   
-   assert(valueHigh < value);
-   assert(valueLow  < value);   
+   assert(valueHigh < value + 1e-6);
+   assert(valueLow  < value + 1e-6);   
 end
 
 %% Local: check marginal value of s
 function check_mvalue_s(spS)
    s0 = 5;
    ds = 1e-3;
-   [marginalValueS, ~, value] = spS.solve_given_s(s0);
-   [~, ~, value2] = spS.solve_given_s(s0 + ds);
+   [marginalValueS,  schoolS,  value] = spS.solve_given_s(s0);
+   [marginalValueS2, school2S, value2] = spS.solve_given_s(s0 + ds);
    checkLH.approx_equal(marginalValueS,  (value2 - value) ./ ds,  1e-4, []);
+end
+
+
+%% Local: check value function
+function check_value_ms(schoolS, spS)
+   disp('Checking value function');
+   [value, pvXs] = spS.value_fct(schoolS);
+   
+   pvXs2 = integral(@integ_value,  0,  schoolS.s);
+   checkLH.approx_equal(pvXs, pvXs2, 1e-4, []);
+   
+   spS.bpS.T = spS.T - schoolS.s;
+   spS.bpS.h0 = schoolS.hS;
+   valueOJT = spS.bpS.pv_earnings .* exp(-spS.r * schoolS.s);
+   
+   value2 = -spS.childCareS.pE .* schoolS.xE - pvXs2 + valueOJT;
+   checkLH.approx_equal(value2, value, 1e-4, []);
+   
+   % Nested: integrand
+   function outV = integ_value(ageV)
+      xsV = spS.x_age(ageV, schoolS.hE, schoolS.qE);
+      outV = exp(-spS.r .* ageV) .* spS.pS .* xsV;
+   end
 end

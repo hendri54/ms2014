@@ -13,7 +13,7 @@ sameParams = true;
 
 paramS.beta1 = 0.38;
 paramS.beta2 = 0.31;
-paramS.zs = paramS.zH + 0.05;
+paramS.zs = paramS.zH;
 
 paramS.beta1 = paramS.gamma1;
 paramS.beta2 = paramS.gamma2; % +++++
@@ -35,9 +35,15 @@ TFP = 1;
 pk = 1;
 priceS = factor_prices_ms(TFP, pk, cS);
 
-if false  % +++++
+if false
    priceS.pS = 0.99;
    sameParams = false;
+end
+
+if false
+   priceS.pS = 0.99;
+   priceS.pE = 0.99;
+   priceS.pW = 0.99;
 end
 
 
@@ -59,8 +65,12 @@ check_optimality_ms(schoolS, spS, bpS, sameParams);
 % Check against solution for given s
 check_given_s(schoolS, spS);
 
+% Check value function
+check_value_ms(schoolS, spS);
+
 % Check marginal value of s
-check_mvalue_s(spS)
+% currently not correct +++++
+% check_mvalue_s(spS)
 
 check_age_profiles(schoolS, spS);
 
@@ -150,29 +160,40 @@ function check_given_s(schoolS, spS)
       1e-3, []);
    checkLH.approx_equal(marginalValueS, 0, 1e-3, []);
 
-   % Check optimality of s
-   ds = 1e-2;
-   [~,~, valueHigh] = spS.solve_given_s(schoolS.s + ds);
-   [~,~, valueLow] = spS.solve_given_s(schoolS.s - ds);   
-   assert(valueHigh < value);
-   assert(valueLow  < value);
-   
    % Plot deviation from optimal schooling condition against s
    if true
       sV = linspace(6, 14, 30)';
       valueV = zeros(size(sV));
       devOptSV = zeros(size(sV));
       HV = zeros(size(sV));
+      dVdsV = zeros(size(sV));
+      n0V = zeros(sizeV));
       for i1 = 1 : length(sV)
          [devOptSV(i1), schoolS, valueV(i1)] = spS.solve_given_s(sV(i1));
          % Hamiltonian
          HV(i1) = -spS.pS .* schoolS.xS  +  schoolS.qS .* (spS.htech(schoolS.hS, schoolS.xS) - spS.deltaH * schoolS.hS);
          % Marginal value of s on OJT
-         spS.bpS.T = spS.T
+         spS.bpS.T = spS.T - sV(i1);
+         spS.bpS.h0 = schoolS.hS;
+         dVdsV(i1) = spS.bpS.marginal_value_age0;
+         n0V(i1) = spS.bpS.nh(0) ./ schoolS.hS;
       end
-      disp('Schooling  mValueS  Hamilt  value');
-      disp([sV, devOptSV, HV, valueV - valueV(1)]);
+      fprintf(' %10s',  'Schooling',  'mValueS',  'Hamilt',  'dVds',  'value',  'n0');
+      fprintf('\n');
+      for i1 = 1 : length(sV)
+         fprintf(' %10.3f', sV(i1), devOptSV(i1), HV(i1), dVdsV(i1), valueV(i1) - valueV(1));
+      end
+      fprintf('\n');
+      keyboard;
    end
+
+   
+   % Check optimality of s
+   ds = 1e-2;
+   [~,~, valueHigh] = spS.solve_given_s(schoolS.s + ds);
+   [~,~, valueLow] = spS.solve_given_s(schoolS.s - ds);   
+   assert(valueHigh < value);
+   assert(valueLow  < value);   
 end
 
 %% Local: check marginal value of s
@@ -182,4 +203,27 @@ function check_mvalue_s(spS)
    [marginalValueS, ~, value] = spS.solve_given_s(s0);
    [~, ~, value2] = spS.solve_given_s(s0 + ds);
    checkLH.approx_equal(marginalValueS,  (value2 - value) ./ ds,  1e-4, []);
+end
+
+
+%% Local: check value function
+function check_value_ms(schoolS, spS)
+   disp('Checking value function');
+   [value, pvXs] = spS.value_fct(schoolS);
+   
+   pvXs2 = integral(@integ_value,  0,  schoolS.s);
+   checkLH.approx_equal(pvXs, pvXs2, 1e-4, []);
+   
+   spS.bpS.T = spS.T - schoolS.s;
+   spS.bpS.h0 = schoolS.hS;
+   valueOJT = spS.bpS.pv_earnings .* exp(-spS.r * schoolS.s);
+   
+   value2 = -spS.childCareS.pE .* schoolS.xE - pvXs2 + valueOJT;
+   checkLH.approx_equal(value2, value, 1e-4, []);
+   
+   % Nested: integrand
+   function outV = integ_value(ageV)
+      xsV = spS.x_age(ageV, schoolS.hE, schoolS.qE);
+      outV = exp(-spS.r .* ageV) .* spS.pS .* xsV;
+   end
 end

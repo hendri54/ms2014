@@ -49,23 +49,9 @@ else
    % fprintf('Max dev: %f \n',  max(abs(devV)));
 end
 
-%% Value
 
 % Value
-spS.bpS.T = spS.T - schoolS.s;
-spS.bpS.h0 = schoolS.hS;
-pvEarn = exp(-spS.r .* schoolS.s) .* spS.bpS.pv_earnings;
-
-% Present value of xs
-if schoolS.s > 0
-   gx = spS.g_xs;
-   pvXs = spS.pS .* schoolS.xS .* exp(-gx .* schoolS.s) ./ (gx - spS.r) .* ...
-      (exp((gx - spS.r) * schoolS.s) - 1);
-else
-   pvXs = 0;
-end
-
-value = -pvXs + pvEarn;
+value = spS.value_fct(schoolS);
 
 
 %% Nested Deviation function
