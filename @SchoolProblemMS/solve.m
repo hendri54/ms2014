@@ -4,8 +4,6 @@ function schoolS = solve(spS)
 Schooling could be 0
 
 IN
-   priceS
-      struct with prices: pW, pS, pE, wage
 
 Change: allow initial guesses +++
 %}

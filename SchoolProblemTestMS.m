@@ -65,8 +65,7 @@ checkLH.approx_equal(spS.gamma, paramS.beta1 + paramS.beta2, 1e-6, []);
 check_optimality_ms(schoolS, spS, bpS, sameParams);
 
 % Check marginal value of s
-% currently not correct +++++
-% check_mvalue_s(spS)
+check_mvalue_s(spS)
 
 % Check against solution for given s
 check_given_s(schoolS, spS);
@@ -163,15 +162,20 @@ function check_given_s(schoolS, spS)
    checkLH.approx_equal(marginalValueS, 0, 1e-3, []);
 
    % Plot deviation from optimal schooling condition against s
-   if true
+   if false
       sV = linspace(6, 14, 30)';
       valueV = zeros(size(sV));
       devOptSV = zeros(size(sV));
       HV = zeros(size(sV));
       dVdsV = zeros(size(sV));
+      mvV = zeros(size(sV));
       n0V = zeros(size(sV));
       for i1 = 1 : length(sV)
          [devOptSV(i1), school2S, valueV(i1)] = spS.solve_given_s(sV(i1));
+         ds = 1e-3;
+         [~,~,value2] = spS.solve_given_s(sV(i1) + ds);
+         % Marginal value
+         mvV(i1) = (value2 - valueV(i1)) ./ ds .* exp(spS.r .* sV(i1));
          % Hamiltonian
          HV(i1) = -spS.pS .* school2S.xS  +  school2S.qS .* (spS.htech(school2S.hS, school2S.xS) - spS.deltaH * school2S.hS);
          % Marginal value of s on OJT
@@ -180,10 +184,10 @@ function check_given_s(schoolS, spS)
          dVdsV(i1) = spS.bpS.marginal_value_age0;
          n0V(i1) = spS.bpS.nh(0) ./ school2S.hS;
       end
-      fprintf(' %10s',  'Schooling',  'mValueS',  'Hamilt',  'dVds',  'value',  'n0');
+      fprintf(' %10s',  'Schooling',  'mValueS',  'mv',  'Hamilt',  'dVds',  'value',  'n0');
       fprintf('\n');
       for i1 = 1 : length(sV)
-         fprintf(' %10.3f', sV(i1), devOptSV(i1), HV(i1), dVdsV(i1), valueV(i1) - valueV(1), n0V(i1));
+         fprintf(' %10.3f', sV(i1), devOptSV(i1), mvV(i1), HV(i1), dVdsV(i1), valueV(i1) - valueV(1), n0V(i1));
          fprintf('\n');
       end
    end
@@ -203,7 +207,7 @@ function check_mvalue_s(spS)
    ds = 1e-3;
    [marginalValueS,  schoolS,  value] = spS.solve_given_s(s0);
    [marginalValueS2, school2S, value2] = spS.solve_given_s(s0 + ds);
-   checkLH.approx_equal(marginalValueS,  (value2 - value) ./ ds,  1e-4, []);
+   checkLH.approx_equal(marginalValueS,  (value2 - value) ./ ds * exp(spS.r * s0), [],  1e-3);
 end
 
 
