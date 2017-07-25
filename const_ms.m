@@ -136,7 +136,7 @@ end
 
 setStr = sprintf('set%03i', setNo);
 
-dirS.baseDir = '/users/lutz/dropbox/hc/ms2014/';
+dirS.baseDir = '/users/lutz/Documents/projects/p2016/ms2014/';
 dirS.progDir = fullfile(dirS.baseDir, 'prog');
 dirS.dataDir = fullfile(dirS.baseDir, 'data');
 dirS.matDir  = fullfile(dirS.baseDir, 'mat', setStr);

@@ -39,6 +39,6 @@ country_ms.calibrate_tfp(setNo)
 %% Other code
 
 % Test everything
-test_all_ms(setNo);
+test_all_ms;
 
 end

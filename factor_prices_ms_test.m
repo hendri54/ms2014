@@ -1,5 +1,13 @@
-function factor_prices_test_ms(setNo)
+function tests = factor_prices_ms_test
 
+tests = functiontests(localfunctions);
+
+end
+
+
+function oneTest(testCase)
+
+setNo = 2;
 cS = const_ms(setNo);
 TFP = 1.2;
 pk = 0.8;

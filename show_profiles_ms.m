@@ -16,7 +16,7 @@ yLabelV = {'h', 'n', 'xw', 'wage'};
 nFig = length(yLabelV);
 
 for iFig = 1 : nFig
-   fS = FigureLH('visible', 'on');
+   fS = FigureLH('visible', true);
    fS.set_defaults;
    fS.new;
    hold on;

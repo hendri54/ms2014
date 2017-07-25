@@ -7,8 +7,11 @@ Ages are relative to start of school
 Methods not in this file
    solve
       solve school problem
+
+Outdated: now in more general class BenPorathCornerLH
+(without the qE,xE,hE choice baked in)
 %}
-classdef SchoolProblemMS
+classdef SchoolProblemMS < handle
    
 properties
    % productivity parameter
@@ -37,6 +40,12 @@ end
 
 methods
    %% Constructor
+   %{
+   IN
+      bpS  BenPorathContTimeLH
+         horizon not known when problem is initialized; changed later in code when length of
+         schooling known
+   %}
    function spS = SchoolProblemMS(z, deltaH, gamma1, gamma2, T, pS, r, ccS, bpS)
       spS.z = z;
       spS.deltaH = deltaH;
@@ -96,10 +105,7 @@ methods
    end
    
    
-   %% Solving for individual pieces
-
-   
-   % Compute h(s), x(s), q(s) given s
+   %% Compute h(s), x(s), q(s) given s, hE, qE
    %{
    IN
       sV
@@ -131,6 +137,7 @@ methods
       validateattributes(hSchoolV, {'double'}, {'finite', 'nonnan', 'nonempty', 'real', 'positive'})
       validateattributes(qsV, {'double'}, {'finite', 'nonnan', 'nonempty', 'real', 'positive'})
       
+      % Foc for x(a)
       xsV = (spS.z .* spS.gamma2 ./ spS.pS .* qsV .* (hSchoolV .^ spS.gamma1)) .^ (1 ./ (1 - spS.gamma2));
       validateattributes(xsV, {'double'}, {'finite', 'nonnan', 'nonempty', 'real', 'positive'})
    end   

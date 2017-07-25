@@ -1,89 +1,99 @@
-function SchoolProblemTestMS(setNo)
+function tests = SchoolProblemMsTest
 
-cS = const_ms(setNo);
-paramS = param_set_ms(setNo);
-paramS = param_derived_ms(paramS, cS);
-ageRetire = cS.demogS.Rmax - cS.demogS.startAge;
+tests = functiontests(localfunctions);
+
+end
 
 
-%% Set parameters
+%% Test method setup
+function [paramS, ccS, spS, schoolS, sameParams, bpS] = ModelSetup
+   setNo = 2;
+   cS = const_ms(setNo);
+   paramS = param_set_ms(setNo);
+   paramS = param_derived_ms(paramS, cS);
+   ageRetire = cS.demogS.Rmax - cS.demogS.startAge;
 
-% Use same params and prices for schooling and OJT?
-sameParams = true;
 
-paramS.beta1 = 0.38;
-paramS.beta2 = 0.31;
-paramS.zs = paramS.zH;
+   % *****  Set parameters
 
-paramS.beta1 = paramS.gamma1;
-paramS.beta2 = paramS.gamma2; % +++++
+   % Use same params and prices for schooling and OJT?
+   sameParams = true;
 
-if sameParams
-   % Start with MS's parameters
-   paramS.beta1 = paramS.gamma1;
-   paramS.beta2 = paramS.gamma2;
+   paramS.beta1 = 0.38;
+   paramS.beta2 = 0.31;
    paramS.zs = paramS.zH;
+
+   paramS.beta1 = paramS.gamma1;
+   paramS.beta2 = paramS.gamma2; % +++++
+
+   if sameParams
+      % Start with MS's parameters
+      paramS.beta1 = paramS.gamma1;
+      paramS.beta2 = paramS.gamma2;
+      paramS.zs = paramS.zH;
+   end
+
+
+   % Try such that s = 0
+   % paramS.zs = 0.15; % +++++
+   % paramS.zH = paramS.zs;
+
+   % Factor prices
+   TFP = 1;
+   pk = 1;
+   priceS = factor_prices_ms(TFP, pk, cS);
+
+   if 0
+      priceS.pS = 0.98;
+      sameParams = false;
+   end
+
+   if 0
+      priceS.pS = 0.99;
+      priceS.pE = 0.99;
+      priceS.pW = 0.99;
+   end
+
+
+   % Solve
+
+   ccS = ChildCareMS(cS.hTechS.hB, priceS.pE, paramS.v);
+   bpS = BenPorathContTimeLH(paramS.zH, paramS.deltaH, paramS.gamma1, paramS.gamma2, ageRetire, 1, ...
+      priceS.pW, paramS.r, priceS.wage);
+
+   spS = SchoolProblemMS(paramS.zs, paramS.deltaH, paramS.beta1, paramS.beta2, ageRetire, priceS.pS, paramS.r, ccS, bpS);
+   schoolS = spS.solve;
+   disp('Solution to school problem:');
+   disp(schoolS);
+
+   checkLH.approx_equal(spS.gamma, paramS.beta1 + paramS.beta2, 1e-6, []);
 end
 
 
-% Try such that s = 0
-% paramS.zs = 0.15; % +++++
-% paramS.zH = paramS.zs;
+% % Check optimality conditions
+% check_optimality_ms(schoolS, spS, bpS, sameParams);
+% 
+% % Check marginal value of s
+% check_mvalue_s(spS)
+% 
+% % Check against solution for given s
+% check_given_s(schoolS, spS);
+% 
+% % Check value function
+% check_value_ms(schoolS, spS);
+% 
+% check_age_profiles(schoolS, spS);
+% 
+% fprintf('Testing SchoolProblemMS done \n');
 
-% Factor prices
-TFP = 1;
-pk = 1;
-priceS = factor_prices_ms(TFP, pk, cS);
-
-if 0
-   priceS.pS = 0.98;
-   sameParams = false;
-end
-
-if 0
-   priceS.pS = 0.99;
-   priceS.pE = 0.99;
-   priceS.pW = 0.99;
-end
-
-
-%% Solve and check
-
-ccS = ChildCareMS(cS.hTechS.hB, priceS.pE, paramS.v);
-bpS = BenPorathContTimeLH(paramS.zH, paramS.deltaH, paramS.gamma1, paramS.gamma2, ageRetire, 1, ...
-   priceS.pW, paramS.r, priceS.wage);
-
-spS = SchoolProblemMS(paramS.zs, paramS.deltaH, paramS.beta1, paramS.beta2, ageRetire, priceS.pS, paramS.r, ccS, bpS);
-schoolS = spS.solve;
-disp('Solution to school problem:');
-disp(schoolS);
-
-checkLH.approx_equal(spS.gamma, paramS.beta1 + paramS.beta2, 1e-6, []);
-
-
-% Check optimality conditions
-check_optimality_ms(schoolS, spS, bpS, sameParams);
-
-% Check marginal value of s
-check_mvalue_s(spS)
-
-% Check against solution for given s
-check_given_s(schoolS, spS);
-
-% Check value function
-check_value_ms(schoolS, spS);
-
-check_age_profiles(schoolS, spS);
-
-fprintf('Testing SchoolProblemMS done \n');
-
-end
+% end
 
 % --------- Local function start here
 
 %% Age profiles
 % Ages relative to start of school
-function check_age_profiles(schoolS, spS)
+function age_profiles_test(testCase)
+   [paramS, ccS, spS, schoolS] = ModelSetup;
    if schoolS.s > 1
       nAge = round(100 .* schoolS.s);
       ageV = linspace(0, schoolS.s, nAge)';
@@ -120,8 +130,11 @@ function check_age_profiles(schoolS, spS)
    end
 end
 
+
 %% Local: check optimality conditions
-function check_optimality_ms(schoolS, spS, bpS, sameParams)
+function optimality_test(testCase)
+   % (schoolS, spS, bpS, sameParams)
+   [paramS, ccS, spS, schoolS, sameParams, bpS] = ModelSetup;
    if schoolS.s > 0.01
       devV = spS.dev_given_s_qE(schoolS.s, schoolS.qE);
       checkLH.approx_equal(devV, zeros(size(devV)), 1e-4, []);
@@ -155,7 +168,8 @@ end
 
 
 %% Local: Solve for given s
-function check_given_s(schoolS, spS)
+function given_s_test(testCase)
+   [paramS, ccS, spS, schoolS, sameParams, bpS] = ModelSetup;
    [marginalValueS, school2S, value] = spS.solve_given_s(schoolS.s);
    checkLH.approx_equal([schoolS.hE, schoolS.qE, schoolS.hS], [school2S.hE, school2S.qE, school2S.hS], ...
       1e-3, []);
@@ -201,8 +215,10 @@ function check_given_s(schoolS, spS)
    assert(valueLow  < value + 1e-6);   
 end
 
+
 %% Local: check marginal value of s
-function check_mvalue_s(spS)
+function mvalue_s_test(testCase)
+   [paramS, ccS, spS, schoolS, sameParams, bpS] = ModelSetup;
    s0 = 5;
    ds = 1e-3;
    [marginalValueS,  schoolS,  value] = spS.solve_given_s(s0);
@@ -212,7 +228,8 @@ end
 
 
 %% Local: check value function
-function check_value_ms(schoolS, spS)
+function value_ms_test(testCase)
+   [paramS, ccS, spS, schoolS, sameParams, bpS] = ModelSetup;
    disp('Checking value function');
    [value, pvXs] = spS.value_fct(schoolS);
    

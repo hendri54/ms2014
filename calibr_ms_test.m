@@ -1,9 +1,19 @@
-function calibr_test_ms(setNo)
+function tests = calibr_ms_test
 % Check that calibration recovers equilibrium
 %{
 Does not recover what was computed during calibration (because s is not matched exactly)
 %}
 
+tests = functiontests(localfunctions);
+
+
+end
+
+
+function oneTest(testCase)
+
+
+setNo = 2;
 cS = const_ms(setNo);
 
 % Assumes that calibration has run

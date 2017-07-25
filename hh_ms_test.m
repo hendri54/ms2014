@@ -1,9 +1,14 @@
-function hh_test_ms(setNo)
+function tests = hh_ms_test
 % given solution to hh problem, test against other equations in the paper
-%{
-IN
-%}
 
+tests = functiontests(localfunctions);
+
+end
+
+
+function oneTest(testCase)
+
+setNo = 2;
 cS = const_ms(setNo);
 paramS = param_set_ms(setNo);
 paramS = param_derived_ms(paramS, cS);
@@ -15,7 +20,6 @@ priceS = factor_prices_ms(countryS.TFP, countryS.pk, cS);
 
 % Solve household problem
 hhS = hh_solve_ms(countryS.ageRetire, priceS, paramS, cS);
-
 
 
 end

@@ -10,7 +10,7 @@ IN
    R
       length of work period
    h6S
-      h(6+s)
+      h(6+s) at start of work period
 
 %}
 

@@ -1,5 +1,13 @@
-function cal_dev_test_ms(setNo)
+function tests = cal_dev_ms_test
 
+tests = functiontests(localfunctions);
+
+end
+
+
+function oneTest(testCase)
+
+setNo = 2;
 cS = const_ms(setNo);
 paramS = param_set_ms(setNo);
 paramS = param_derived_ms(paramS, cS);

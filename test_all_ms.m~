@@ -22,9 +22,15 @@ end
 % TFP = 1;
 % pk = 1;
 % 
+% factor_prices_test_ms(setNo)
+% 
 % % Factor prices
 % priceS = factor_prices_ms(TFP, pk, cS);
 % 
+% 
+% %% Child care, schooling
+% 
+% SchoolProblemTestMS(setNo);
 % 
 % 
 % %% Household
@@ -34,6 +40,8 @@ end
 % hS = 9.43;
 % ojt_solve_ms(experV, priceS.wage, priceS.pW, ageRetire, hS, paramS, cS);
 % 
+% % Solve household problem
+% hh_test_ms(setNo);
 % 
 % 
 % %% Equilibrium

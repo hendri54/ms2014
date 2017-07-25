@@ -1,0 +1,1 @@
+Code to replicate Manuelli/Seshadri (2014 AER)

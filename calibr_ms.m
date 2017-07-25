@@ -1,5 +1,5 @@
 function calibr_ms(setNo)
-% Calibration
+% Calibration to US data
 
 cS = const_ms(setNo);
 paramS = param_load_ms(setNo);

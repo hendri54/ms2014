@@ -2,11 +2,13 @@ classdef CountryParamsMs < handle
 % Country specific parameters
 
 properties
-   TFP
-   T
-   ageRetire
-   pk
-   popGrowth
+   TFP   double
+   % Life span
+   T  double
+   % Retirement age
+   ageRetire   double
+   pk    double
+   popGrowth   double
 end
 
 

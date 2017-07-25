@@ -6,7 +6,7 @@ IN
       output of equilibrium_ms
 %}
 
-saveFigures = 0;
+saveFigures = 1;
 
 cS = const_ms(setNo);
 paramS = param_load_ms(setNo);
@@ -28,7 +28,7 @@ fprintf('s = %.2f    h(6+s) = %.2f    hE = %.2f \n', ...
 
 hhS = outS.hhS;
 
-fS = FigureLH('visible', 'on');
+fS = FigureLH('visible', true);
 fS.new;
 
 fS.plot_line(hhS.experV + cS.demogS.startAge + hhS.s, hhS.wageV, 1);
@@ -37,6 +37,20 @@ ylabel('Wage');
 
 fS.format;
 fS.save(fullfile(cS.dirS.outDir, 'wage_profile'), saveFigures);
+
+
+%% Time investment profile
+
+fS = FigureLH('visible', true);
+fS.new;
+
+fS.plot_line(hhS.experV + cS.demogS.startAge + hhS.s, hhS.n_aV, 1);
+xlabel('Age');
+ylabel('n');
+
+fS.format;
+fS.save(fullfile(cS.dirS.outDir, 'n_profile'), saveFigures);
+
 
 
 

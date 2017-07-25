@@ -1,4 +1,10 @@
-function ChildCareTestMS
+function tests = ChildCareMsTest
+
+tests = functiontests(localfunctions);
+
+end
+
+function oneTest(testCase)
 
 v = 0.6;
 hB = 3;
@@ -11,9 +17,9 @@ ccS = ChildCareMS(hB, pE, v);
 
 v0 = ccS.value(qE, xE);
 
+% Test optimality by perturbation
 assert(ccS.value(qE, xE + 1e-4) < v0)
 assert(ccS.value(qE, xE - 1e-4) < v0)
-
 
 % Check (29)
 dev29 = hE - ((v * qE / pE) .^ (v / (1-v)))  *  (hB ^ (1/(1-v)));
