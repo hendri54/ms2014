@@ -1,5 +1,5 @@
 function paramS = param_load_ms(setNo)
-% Load save parameters
+% Load saved parameters
 
 cS = const_ms(setNo);
 

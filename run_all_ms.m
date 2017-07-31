@@ -1,4 +1,5 @@
 function run_all_ms(setNo)
+% Run everything in sequence
 
 cS = const_ms(setNo);
 saveFigures = 1;

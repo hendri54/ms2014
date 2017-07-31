@@ -1,9 +1,14 @@
 function equil_show_ms(countryS, setNo)
 % Show equilibrium
 %{
+Load calibrated parameters from file (saved by calibr_ms). 
+Impose country specific parameters from countryS.
+Compute equilibrium.
+Plot.
+
 IN
-   outS
-      output of equilibrium_ms
+   countryS  ::  CountryParamsMs
+      country specific parameters
 %}
 
 saveFigures = 1;

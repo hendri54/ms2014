@@ -10,16 +10,22 @@ scalarDev = true;
 % Data for US
 countryS = param_ms.country_data('USA', setNo);
 
-% devV = cal_dev_ms(countryS, paramS, cS);
-% 
-guessV = cS.pvector.guess_make(paramS, 1);
-% dev2V = cal_dev_nested(guessV);
 
-% checkLH.approx_equal(devV, dev2V, 1e-4, []);
+% Make vector of guesses for calibrated parameters
+guessV = cS.pvector.guess_make(paramS, 1);
+fprintf('%i calibrated parameters \n',  length(guessV));
+
+% Check that parameters and guesses are consistent
+% Can only be done if objective does not return scalar deviation
+if ~scalarDev
+   devV = cal_dev_ms(countryS, paramS, cS);
+   dev2V = cal_dev_nested(guessV);
+   checkLH.approx_equal(devV, dev2V, 1e-4, []);
+end
+
 
 
 %% Check that all params affect result
-
 if 0
    disp('Checking that all guesses affect results');
    for ig = 1 : length(guessV)
@@ -32,14 +38,14 @@ if 0
    return
 end
 
+
 %% Minimization
-
-
 % should use nlopt +++
+
+% Bounds, used by some algorithms
 lbV = repmat(cS.pvector.guessMin + 1e-5, size(guessV));
 ubV = repmat(cS.pvector.guessMax - 1e-5, size(guessV));
 
-scalarDev = true;
 optS = optimset('fminsearch');
 optS.MaxFunEvals = 200;
 optS.Display = 'final';

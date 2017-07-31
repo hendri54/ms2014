@@ -1,5 +1,8 @@
 function outS = equilibrium_ms(countryS, paramS, cS)
 % Compute equilibrium
+%{
+Parameters are common (from paramS), except for those in countryS
+%}
 
 assert(isa(countryS, 'CountryParamsMs'));
 
