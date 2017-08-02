@@ -27,6 +27,8 @@ hhS.experV = linspace(0.01, Tmax, nAge);
 [hhS.h_aV, hhS.n_aV, hhS.xw_aV, hhS.wageV] = ...
    ojt_solve_ms(hhS.experV, priceS.wage, priceS.pW, Tmax, hhS.hS, paramS, cS);
 
-validateattributes(hhS.n_aV, {'double'}, {'finite', 'nonnan', 'nonempty', 'real', '>=', 0, '<=', 1})
+% Generically, you cannot guarantee that n <= 1 unless the price of goods during schooling and job
+% training are the same
+%validateattributes(hhS.n_aV, {'double'}, {'finite', 'nonnan', 'nonempty', 'real', '>=', 0, '<=', 1})
 
 end

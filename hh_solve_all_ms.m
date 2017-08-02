@@ -68,12 +68,13 @@ saveS.n_agM = zeros(nAge, cS.nGroups);
 saveS.xw_agM = zeros(nAge, cS.nGroups);
 
 for ig = 1 : cS.nGroups
-   ageV = linspace(6 + tbM.school(ig) + 0.1, tbM.ageRetire(ig), nAge);
+   ageV = linspace(cS.demogS.startAge + tbM.school(ig) + 0.1, tbM.ageRetire(ig), nAge);
+   experV = ageV - cS.demogS.startAge - tbM.school(ig);
    saveS.age_agM(:,ig) = ageV;
    
    [saveS.h_agM(:,ig), saveS.n_agM(:,ig), saveS.xw_agM(:,ig)] = ...
-      ojt_solve_ms(ageV, (1 - tau) * tbM.wage(ig), tbM.pW(ig), ...
-      tbM.ageRetire(ig), tbM.school(ig), tbM.hS(ig), paramS, cS);
+      ojt_solve_ms(experV, (1 - tau) * tbM.wage(ig), tbM.pW(ig), ...
+      tbM.ageRetire(ig) - tbM.school(ig) - cS.demogS.startAge, tbM.school(ig), tbM.hS(ig), paramS, cS);
    
    saveS.wage_agM(:, ig) = (1-tau) .* tbM.wage(ig) .* saveS.h_agM(:,ig) .* ...
       (1 - saveS.n_agM(:,ig)) - tbM.pW(ig) .* saveS.xw_agM(:,ig);

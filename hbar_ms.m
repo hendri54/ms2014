@@ -15,7 +15,8 @@ validateattributes(hBar, {'double'}, {'finite', 'nonnan', 'nonempty', 'real', 's
 
 %% Nested: integrand
    function outV = integ_hbar(ageV)
-      [haV, naV] = ojt_solve_ms(ageV - s - cS.demogS.startAge, priceS.wage, priceS.pW, countryS.ageRetire - s, ...
+      [haV, naV] = ojt_solve_ms(ageV - s - cS.demogS.startAge, priceS.wage, priceS.pW, ...
+         countryS.ageRetire - s - cS.demogS.startAge, ...
          h6S, paramS, cS);
       phi_aV = phi_age_ms(ageV, countryS.popGrowth, countryS.T);
 

@@ -1,6 +1,8 @@
 function [haV, naV, xwV, earnV, bpS] = ojt_solve_ms(experV, wage, pW, R, h6S, paramS, cS)
 % Solve job training part for given s, h(6+s), for one age
 %{
+Assumes interior solution for n
+
 IN
    experV
       ages - work start age

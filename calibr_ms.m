@@ -63,6 +63,7 @@ var_save_ms(devS, 'cal_results', setNo);
 
 % Compute and save equilibrium
 outS = equilibrium_ms(countryS, paramOutS, cS);
+%outS.countryS = countryS;
 var_save_ms(outS, 'equilibrium', setNo);
 
 equil_show_ms(countryS, setNo);

@@ -1,7 +1,5 @@
 function cS = const_ms(setNo)
 
-% cS = const_lh;
-
 
 %% Miscellaneous
 
@@ -15,6 +13,7 @@ cS.nGroups = 10;
 
 cS.pvector = pvectorLH(10, [0, 1]);
 
+% Ben-Porath technology
 pS = pstructLH('zH', 'zH', 'h productivity', 0.334, 0.05, 2, 1);
 cS.pvector.add(pS);
 
@@ -28,8 +27,10 @@ cS.pvector.add(pS);
 pS = pstructLH('g1g', 'g1OverGamma', 'gamma1 / gamma', 0.486 / 0.886, 0.1, 0.9, 1);
 cS.pvector.add(pS);
 
+% Child care technology
 pS = pstructLH('v', 'v', 'h productivity', 0.618, 0.1, 0.9, 1);
 cS.pvector.add(pS);
+
 
 % ****  School technology
 
@@ -51,11 +52,13 @@ cS.pvector.add(pS);
 
 cS.taxRate = 0;
 
+% Output technology
 techS.deltaK = 0.075;
 techS.capShare = 0.33;
 techS.zUS = 1;
 cS.techS = techS;
 
+% H technology
 hTechS.capShare = 0.2;
 % hTechS.deltaH = 0.027;
 % hTechS.zH = 0.334;
@@ -102,13 +105,20 @@ cS.tgS = tgS;
 %% Cases
 
 if setNo == 1
+   % Schooling and job training have different technologies
    cS.descrStr = 'Default';
 elseif setNo == 2
    cS.descrStr = 'Same technologies';
    % Same technologies for schooling and job training?
    cS.sameCurvature = true;
    cS.sameProductivity = true;
+   % Same capital shares for school good and consumption good
    cS.hTechS.capShare = cS.techS.capShare;
+elseif setNo == 3
+   cS.descrStr = 'Same curvatures';
+   % Same technologies for schooling and job training?
+   cS.sameCurvature = true;
+   cS.sameProductivity = true;
 else
    error('Invalid');
 end
@@ -116,20 +126,22 @@ end
 
 %% Implied parameters
 
+% Consumption goods sector
 cS.outputTechS = OutputTechMs(cS.techS.capShare);
 
+% Schooling goods technology
 cS.schoolTechS = OutputTechMs(cS.hTechS.capShare);
 
 if cS.sameCurvature
+   % Same curvature for schooling and OJT
    cS.pvector.calibrate('beta', 0);
    cS.pvector.calibrate('b1b', 0);
 end
 
 if cS.sameProductivity
+   % Same productivity for schooling and OJT
    cS.pvector.calibrate('zs', 0);
 end
-
-% cS.demogS.popGrowthUS = cS.tgS.fertility / cS.demogS.B;
 
 
 %% Directories

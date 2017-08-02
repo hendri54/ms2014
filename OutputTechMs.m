@@ -1,6 +1,8 @@
 classdef OutputTechMs < handle
 %{
 Production functions: y = z (k/h) ^ theta
+   
+For consumption goods and schooling goods
 %}
    
 properties
